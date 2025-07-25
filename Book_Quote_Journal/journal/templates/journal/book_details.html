@@ -1,0 +1,19 @@
+<h1>{{ book.title }}</h1>
+<p>Author: {{ book.author.name }}</p>
+<p>Genre: {{ book.genre }}</p>
+<p>Page: {{ book.page }}</p>
+<p>Created: {{ book.created_date }}</p>
+
+<h2>Quotes:</h2>
+<ul>
+  {% for quote in quotes %}
+    <li>
+      <strong>Quote name: {{ quote.name }}</strong><br>
+      <strong>Page: {{ quote.page_number }}</strong><br>
+      <strong>Content: </strong><br>
+            {{ quote.content }}
+    </li>
+  {% empty %}
+    <li>No quotes found for this book.</li>
+  {% endfor %}
+</ul>

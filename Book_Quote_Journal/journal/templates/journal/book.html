@@ -1,0 +1,18 @@
+{% extends 'journal/main.html' %}
+
+{% block content %}
+
+<div>
+    <h1>All Books</h1>
+    {% for book in books %}
+        <div>
+            <h2>Author Name: {{book.author}}</h2>
+            <h2>Title: {{book.title}}</h2>
+            <h2>Genre: {{book.genre}}</h2>
+            <h2>Page: {{book.page}}</h2>
+            <p>For looking details: <a href="{% url 'book-details' book.unique_id%}">Touch here</a></p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
