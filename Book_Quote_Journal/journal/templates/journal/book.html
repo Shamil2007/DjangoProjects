@@ -2,16 +2,64 @@
 
 {% block content %}
 
-<div>
+<style>
+    .container {
+        padding: 20px;
+    }
+
+    .create-book-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        background-color: #2c3e50;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .create-book-link:hover {
+        background-color: #34495e;
+    }
+
+    .book-card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .book-card h2 {
+        margin: 5px 0;
+        color: #2c3e50;
+    }
+
+    .details-link {
+        color: #2980b9;
+        text-decoration: none;
+    }
+
+    .details-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container">
     <h1>All Books</h1>
+
+    <a class="create-book-link" href="{% url 'createBook' %}">➕ Create a New Book</a>
+
     {% for book in books %}
-        <div>
-            <h2>Author Name: {{book.author}}</h2>
-            <h2>Title: {{book.title}}</h2>
-            <h2>Genre: {{book.genre}}</h2>
-            <h2>Page: {{book.page}}</h2>
-            <p>For looking details: <a href="{% url 'book-details' book.unique_id%}">Touch here</a></p>
+        <div class="book-card">
+            <h2>📚 Title: {{ book.title }}</h2>
+            <h2>👤 Author: {{ book.author }}</h2>
+            <h2>🏷️ Genre: {{ book.genre }}</h2>
+            <h2>📄 Page: {{ book.page }}</h2>
+            <p>🔍 <a class="details-link" href="{% url 'book-details' book.unique_id %}">View Details</a></p>
         </div>
+    {% empty %}
+        <p>No books found.</p>
     {% endfor %}
 </div>
 

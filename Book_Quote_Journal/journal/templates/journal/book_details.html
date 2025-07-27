@@ -1,19 +1,89 @@
-<h1>{{ book.title }}</h1>
-<p>Author: {{ book.author.name }}</p>
-<p>Genre: {{ book.genre }}</p>
-<p>Page: {{ book.page }}</p>
-<p>Created: {{ book.created_date }}</p>
+{% extends 'journal/main.html' %}
 
-<h2>Quotes:</h2>
-<ul>
-  {% for quote in quotes %}
-    <li>
-      <strong>Quote name: {{ quote.name }}</strong><br>
-      <strong>Page: {{ quote.page_number }}</strong><br>
-      <strong>Content: </strong><br>
-            {{ quote.content }}
-    </li>
-  {% empty %}
-    <li>No quotes found for this book.</li>
-  {% endfor %}
-</ul>
+{% block content %}
+
+<style>
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .book-info {
+        background-color: #f1f1f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .book-info h1 {
+        margin-bottom: 10px;
+    }
+
+    .book-info p {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    .quotes-section h2 {
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+
+    .quote-item {
+        background-color: #ffffff;
+        border-left: 4px solid #2980b9;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .quote-item strong {
+        color: #2c3e50;
+    }
+
+    .add-quote-link {
+        display: inline-block;
+        background-color: #27ae60;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 15px;
+    }
+
+    .add-quote-link:hover {
+        background-color: #219150;
+    }
+</style>
+
+<div class="container">
+
+    <div class="book-info">
+        <h1>{{ book.title }}</h1>
+        <p><strong>Author:</strong> {{ book.author.name }}</p>
+        <p><strong>Genre:</strong> {{ book.genre }}</p>
+        <p><strong>Page:</strong> {{ book.page }}</p>
+        <p><strong>Created:</strong> {{ book.created_date }}</p>
+    </div>
+
+    <div class="quotes-section">
+        <h2>📖 Quotes</h2>
+
+        {% for quote in quotes %}
+            <div class="quote-item">
+                <p><strong>Quote Name:</strong> {{ quote.name }}</p>
+                <p><strong>Page Number:</strong> {{ quote.page_number }}</p>
+                <p><strong>Content:</strong><br>{{ quote.content }}</p>
+            </div>
+        {% empty %}
+            <p>No quotes found for this book.</p>
+        {% endfor %}
+
+        <a class="add-quote-link" href="{% url 'createQuote' unique_id %}">➕ Add New Quote</a>
+    </div>
+
+</div>
+
+{% endblock content %}
