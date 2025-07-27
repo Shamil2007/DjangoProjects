@@ -57,6 +57,7 @@
             <h2>🏷️ Genre: {{ book.genre }}</h2>
             <h2>📄 Page: {{ book.page }}</h2>
             <p>🔍 <a class="details-link" href="{% url 'book-details' book.unique_id %}">View Details</a></p>
+            <p>🖋️ <a class="details-link" href="{% url 'updateBook' book.unique_id %}">Update Details</a></p>
         </div>
     {% empty %}
         <p>No books found.</p>

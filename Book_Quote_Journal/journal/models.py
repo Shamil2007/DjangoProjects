@@ -17,8 +17,8 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre
 
-def generate_unique_id():
-    return random.randint(1000, 9999)
+def generate_unique_id(start, finish):
+    return random.randint(start, finish)
 
 class Book(models.Model):
     title = models.CharField(max_length=50, null=False, blank=False)
@@ -27,7 +27,7 @@ class Book(models.Model):
     page = models.IntegerField(null=True, blank=True, 
                                validators=[MinValueValidator(0), MaxValueValidator(2000)])
     created_date = models.DateTimeField(auto_now_add=True)
-    unique_id = models.IntegerField(default=generate_unique_id, 
+    unique_id = models.IntegerField(default=generate_unique_id(1000, 9999), 
                                     unique=True, blank=True, 
                                     null=True, editable=False)
 
@@ -45,6 +45,9 @@ class Quote(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     page_number = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(2000)])
     created_date = models.DateTimeField(auto_now_add=True)
+    unique_id = models.IntegerField(default=generate_unique_id(10000, 99999), 
+                                    unique=True, blank=True, 
+                                    null=True, editable=False)
 
     def __str__(self):
         return self.name

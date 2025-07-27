@@ -56,6 +56,15 @@
     .add-quote-link:hover {
         background-color: #219150;
     }
+
+    .details-link {
+        color: #2980b9;
+        text-decoration: none;
+    }
+
+    .details-link:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="container">
@@ -76,6 +85,7 @@
                 <p><strong>Quote Name:</strong> {{ quote.name }}</p>
                 <p><strong>Page Number:</strong> {{ quote.page_number }}</p>
                 <p><strong>Content:</strong><br>{{ quote.content }}</p>
+                <p><a class="details-link" href="{% url 'updateQuote' unique_id=quote.unique_id %}">🖋️ Update Quote</a></p>
             </div>
         {% empty %}
             <p>No quotes found for this book.</p>

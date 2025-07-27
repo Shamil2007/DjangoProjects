@@ -28,7 +28,9 @@ def createBook(request):
             return redirect('book')
 
     context = {'form': form,
-               'name': 'Book'}
+               'name': 'Book',
+               'is_new': True,
+               'action_type': 'Add'}
     return render(request, 'journal/book_form.html', context)
 
 def createQuote(request,  unique_id):
@@ -41,5 +43,40 @@ def createQuote(request,  unique_id):
             return redirect('book-details',  unique_id)
         
     context = {'form': form,
-               'name': 'Quote'}
+               'name': 'Quote',
+               'is_new': True,
+               'action_type': 'Add'}
+    return render(request, 'journal/book_form.html', context)
+
+
+def updateBook(request, unique_id):
+    book = Book.objects.get(unique_id=unique_id)
+    form = BookForm(instance=book)
+
+    if request.method == "POST":
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book-details',  unique_id=unique_id)
+
+    context = {'form': form,
+               'name': 'Book',
+               'is_new': False,
+               'action_type': 'Update'}
+    return render(request, 'journal/book_form.html', context)
+
+def updateQuote(request, unique_id):
+    quote = Quote.objects.get(unique_id=unique_id)
+    form = QuoteForm(instance=quote)
+
+    if request.method == "POST":
+        form = QuoteForm(request.POST, instance=quote)
+        if form.is_valid():
+            form.save()
+            return redirect('book-details', unique_id=quote.book.unique_id)
+        
+    context = {'form': form,
+               'name': 'Quote',
+               'is_new': False,
+               'action_type': 'Update'}
     return render(request, 'journal/book_form.html', context)
