@@ -7,6 +7,17 @@
         padding: 20px;
     }
 
+    .left-container {
+        padding-top: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: #f0f4f8;
+        border-radius: 8px;
+        margin-right: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+
     .create-book-link {
         display: inline-block;
         margin-bottom: 20px;
@@ -35,6 +46,16 @@
         color: #2c3e50;
     }
 
+    #searchH2 {
+        padding-top: 30px;
+        margin: 8px 0;
+    }
+
+    h3 {
+        margin: 5px 0;
+        color: #2c3e50;
+    }
+
     .details-link {
         color: #2980b9;
         text-decoration: none;
@@ -43,25 +64,80 @@
     .details-link:hover {
         text-decoration: underline;
     }
+
+    .link {
+        text-decoration: none;
+    }
+
+    .link:hover {
+        text-decoration: underline;
+        text-decoration-color: rgba(20, 20, 218, 0.833);
+    }
+
+    #formSearch {
+        margin-bottom: 20px;
+    }
+    
 </style>
 
-<div class="container">
-    <h1>All Books</h1>
+<div style="display: flex;">
+    <div class="left-container" style="width: 20%; min-width: 150px;">
+        <h2 id="searchH2">Search for title</h2>
 
-    <a class="create-book-link" href="{% url 'createBook' %}">➕ Create a New Book</a>
+        <form id="formSearch" action="{% url 'book' %}" method="GET">
+            <input type="text" name="title" placeholder="Search title ...">
+        </form>
 
-    {% for book in books %}
-        <div class="book-card">
-            <h2>📚 Title: {{ book.title }}</h2>
-            <h2>👤 Author: {{ book.author }}</h2>
-            <h2>🏷️ Genre: {{ book.genre }}</h2>
-            <h2>📄 Page: {{ book.page }}</h2>
-            <p>🔍 <a class="details-link" href="{% url 'book-details' book.unique_id %}">View Details</a></p>
-            <p>🖋️ <a class="details-link" href="{% url 'updateBook' book.unique_id %}">Update Details</a></p>
+        <div>
+            <a class="link" href="{% url 'book' %}"><h3>All</h3></a>
         </div>
-    {% empty %}
-        <p>No books found.</p>
-    {% endfor %}
+
+        {% for book_name in books_titles%}
+        <div>
+            <a class="link" href="{% url 'book' %}?title={{book_name}}"><h3>{{book_name}}</h3></a>
+        </div>
+        {% endfor %}
+
+
+
+        <h2 id="searchH2">Search for author</h2>
+
+        <form id="formSearch" action="{% url 'book' %}" method="GET">
+            <input type="text" name="author" placeholder="Search author ...">
+        </form>
+
+        <div>
+            <a class="link" href="{% url 'book' %}"><h3>All</h3></a>
+        </div>
+
+        {% for book_author in books_authors%}
+        <div>
+            <a class="link" href="{% url 'book' %}?author={{book_author}}"><h3>{{book_author}}</h3></a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="container" style="width: 80%;">
+        <h1>All Books</h1>
+        <h2>{{book_count}} Book Available</h2>
+
+        <a class="create-book-link" href="{% url 'createBook' %}">➕ Create a New Book</a>
+
+        {% for book in books %}
+            <div class="book-card">
+                <h2>📚 Title: {{ book.title }}</h2>
+                <h2>👤 Author: {{ book.author }}</h2>
+                <h2>🏷️ Genre: {{ book.genre }}</h2>
+                <h2>📄 Page: {{ book.page }}</h2>
+                <p>🔍 <a class="details-link" href="{% url 'book-details' book.unique_id %}">View Details and Quotes</a></p>
+                <p>🖋️ <a class="details-link" href="{% url 'updateBook' book.unique_id %}">Update Details</a></p>
+                <a class="details-link" href="{% url 'deleteBook' book.unique_id %}" onclick="return confirm('Are you sure you want to delete this quote?')">🗑️ Delete Book</a>
+            </div>
+        {% empty %}
+            <p>No books found.</p>
+        {% endfor %}
+    </div>
 </div>
+
 
 {% endblock content %}
