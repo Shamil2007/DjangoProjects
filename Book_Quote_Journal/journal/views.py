@@ -1,4 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.db.models import Q
 from .models import Book, Quote
 from .forms import BookForm, QuoteForm
@@ -30,6 +33,33 @@ def book_details(request, unique_id):
         'unique_id': unique_id
     }
     return render(request, 'journal/book_details.html', context)
+
+def loginPage(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, "User doesn't exist.")
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request=request, user=user)
+            return redirect('book')
+        else:
+            messages.error(request, "Username or password doesn't exist")
+
+
+    context = {}
+    return render(request, 'journal/login_register.html', context)
+
+def logoutPage(request):
+    logout(request)
+    return redirect('book')
+
 
 def createBook(request):
     form = BookForm()
