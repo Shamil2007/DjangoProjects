@@ -1,6 +1,7 @@
 import random
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Author(models.Model):
@@ -21,6 +22,7 @@ def generate_unique_id(start, finish):
     return random.randint(start, finish)
 
 class Book(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
     title = models.CharField(max_length=50, null=False, blank=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
@@ -40,7 +42,8 @@ class Book(models.Model):
 
 
 class Quote(models.Model):
-    name = models.CharField(max_length=50, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
+    name = models.CharField(max_length=50, null=False, blank=False)
     content = models.TextField(max_length=500, null=False, blank=False)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     page_number = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(2000)])

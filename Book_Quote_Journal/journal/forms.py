@@ -5,9 +5,9 @@ from .models import Book, Quote
 class BookForm(ModelForm):
     class Meta:
         model = Book
-        fields = '__all__'
+        exclude = ['user']  
 
 class QuoteForm(ModelForm):
     class Meta:
         model = Quote
-        fields = '__all__'
+        exclude = ['user']  #

@@ -50,10 +50,23 @@
     .login-container input[type="submit"]:hover {
         background-color: #45a049;
     }
+
+    .link {
+        text-decoration: none;
+    }
+
+    .link:hover {
+        text-decoration: underline;
+        text-decoration-color: rgba(20, 20, 218, 0.833);
+    }
 </style>
 
 <div class="login-container">
-    <h2>Login</h2>
+    {% if page == 'login' %}
+        <h2>Log in</h2>
+    {% else %}
+        <h2>Sign up</h2>
+    {% endif %}
     {% if messages %}
         {% for message in messages %}
             <p style="color:red;">{{ message }}</p>
@@ -61,15 +74,28 @@
         {% endfor %}
     {% endif %}
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" name="username" placeholder="Enter Username..." required>
+    {% if page == 'login' %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" name="username" placeholder="Enter Username..." required>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" placeholder="Enter Password..." required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder="Enter Password..." required>
 
-        <input type="submit" value="Log in">
-    </form>
+            <p>Haven't you sign up?, <a class="link" href="{% url 'signup' %}">click here to register</a></p>
+
+            <input type="submit" value="Log in">
+        </form>
+
+    {% else %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{form}}
+            <p>Do you have account?, <a class="link" href="{% url 'login' %}">click here to log in</a></p>
+
+            <input type="submit" value="Sign up">
+        </form>
+    {% endif %}
 </div>
 {% endblock content %}

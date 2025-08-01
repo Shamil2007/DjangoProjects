@@ -30,7 +30,7 @@
             text-decoration: none;
         }
 
-        .login-btn {
+        .login-signin-btn {
             background-color: #3498db;
             color: white;
             padding: 8px 16px;
@@ -41,9 +41,15 @@
             transition: background-color 0.3s ease;
         }
 
-        .login-btn:hover {
+        .login-signin-btn:hover {
             background-color: #2980b9;
         }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px; /* spacing between buttons */
+        }
+
 
         main {
             max-width: 800px;
@@ -64,9 +70,13 @@
     <header>
         <a href="{% url 'book' %}"><h1>The Library</h1></a>
         {% if not request.user.is_authenticated %}
-            <a href="{% url 'login' %}" class="login-btn">Log in</a>
+            <div class="auth-buttons">
+                <a href="{% url 'login' %}" class="login-signin-btn">Log in</a>
+                <a href="{% url 'signup' %}" class="login-signin-btn">Sign up</a>
+            </div>
         {% else %}
-            <a href="{% url 'logout' %}" class="login-btn">Log out</a>
+            <h1>Hello, {{request.user}}</h1>
+            <a href="{% url 'logout' %}" class="login-signin-btn">Log out</a>
         {% endif %}
     </header>
 

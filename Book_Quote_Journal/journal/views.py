@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from .models import Book, Quote
 from .forms import BookForm, QuoteForm
 
@@ -24,6 +26,7 @@ def book_list(request):
                'books_authors': books_authors}
     return render(request, 'journal/book.html', context)
 
+@login_required(login_url='book')
 def book_details(request, unique_id):
     book = get_object_or_404(Book, unique_id=unique_id)
     quotes = Quote.objects.filter(book=book)
@@ -36,39 +39,49 @@ def book_details(request, unique_id):
 
 def loginPage(request):
     if request.method == "POST":
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
-
-        try:
-            user = User.objects.get(username=username)
-        except:
-            messages.error(request, "User doesn't exist.")
 
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            login(request=request, user=user)
+            login(request, user)
             return redirect('book')
         else:
-            messages.error(request, "Username or password doesn't exist")
+            messages.error(request, "Invalid username or password")
 
+    return render(request, 'journal/login_register.html', {'page': 'login'})
 
-    context = {}
-    return render(request, 'journal/login_register.html', context)
 
 def logoutPage(request):
     logout(request)
     return redirect('book')
 
+def signupPage(request):
+    form = UserCreationForm()
 
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('book')
+
+    context = {'form': form}
+    return render(request, 'journal/login_register.html', context)
+
+@login_required(login_url='book')
 def createBook(request):
     form = BookForm()
 
     if request.method == "POST":
-        print(request.POST)
         form = BookForm(request.POST)
         if form.is_valid():
-            form.save()
+            book = form.save(commit=False)
+            book.user = request.user
+            book.save()
             return redirect('book')
 
     context = {'form': form,
@@ -77,13 +90,17 @@ def createBook(request):
                'action_type': 'Add'}
     return render(request, 'journal/book_form.html', context)
 
+@login_required(login_url='book')
 def createQuote(request,  unique_id):
-    form = QuoteForm()
+    book = Book.objects.get(unique_id=unique_id)
+    form = QuoteForm(initial={'book': book})
 
     if request.method == "POST":
         form = QuoteForm(request.POST)
         if form.is_valid():
-            form.save()
+            quote = form.save(commit=False)
+            quote.user = request.user
+            quote.save()
             return redirect('book-details',  unique_id)
         
     context = {'form': form,
@@ -92,7 +109,7 @@ def createQuote(request,  unique_id):
                'action_type': 'Add'}
     return render(request, 'journal/book_form.html', context)
 
-
+@login_required(login_url='book')
 def updateBook(request, unique_id):
     book = Book.objects.get(unique_id=unique_id)
     form = BookForm(instance=book)
@@ -109,6 +126,7 @@ def updateBook(request, unique_id):
                'action_type': 'Update'}
     return render(request, 'journal/book_form.html', context)
 
+@login_required(login_url='book')
 def updateQuote(request, unique_id):
     quote = Quote.objects.get(unique_id=unique_id)
     form = QuoteForm(instance=quote)
@@ -125,11 +143,13 @@ def updateQuote(request, unique_id):
                'action_type': 'Update'}
     return render(request, 'journal/book_form.html', context)
 
+@login_required(login_url='book')
 def deleteBook(request, unique_id):
     book = Book.objects.get(unique_id=unique_id)
     book.delete()
     return redirect('book')
 
+@login_required(login_url='book')
 def deleteQuote(request, unique_id):
     quote = Quote.objects.get(unique_id=unique_id)
     quote.delete()
